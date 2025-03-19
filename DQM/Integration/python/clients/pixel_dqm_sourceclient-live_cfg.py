@@ -15,11 +15,7 @@ if 'unitTest=True' in sys.argv:
     live=False
     unitTest=True
 
-#set to false for lxplus offline testing
-#live=False
-offlineTesting=not live
-
-TAG ="PixelPhase1" 
+TAG ="PixelPhase1"
 
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.MessageLogger.debugModules = cms.untracked.vstring('siPixelDigis',
@@ -36,15 +32,12 @@ process.MessageLogger.cout = cms.untracked.PSet(threshold = cms.untracked.string
 if (unitTest):
     process.load("DQM.Integration.config.unittestinputsource_cfi")
     from DQM.Integration.config.unittestinputsource_cfi import options
-
+    process.load("DQM.Integration.config.fileinputsource_cfi")
+    from DQM.Integration.config.fileinputsource_cfi import options
 elif (live):
     process.load("DQM.Integration.config.inputsource_cfi")
     from DQM.Integration.config.inputsource_cfi import options
 
-# for testing in lxplus
-elif(offlineTesting):
-    process.load("DQM.Integration.config.fileinputsource_cfi")
-    from DQM.Integration.config.fileinputsource_cfi import options
 
 #-----------------------------
 # DQM Environment
@@ -84,9 +77,8 @@ process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
 
 if (live):
     process.load("DQM.Integration.config.FrontierCondition_GT_cfi")
-
-# Condition for lxplus: change and possibly customise the GT
-elif(offlineTesting):
+# Unit tests: Change and possibly customise the GT
+elif(unitTest):
     process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
     from Configuration.AlCa.GlobalTag import GlobalTag as gtCustomise
     process.GlobalTag = gtCustomise(process.GlobalTag, 'auto:hltonline', '')
